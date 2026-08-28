@@ -1,0 +1,27 @@
+name,color,description
+agent:product,0366D6,Product Agent - feature and acceptance criteria
+agent:security,D73A4A,Security Agent - risk and defensive controls
+agent:threat,B60205,Threat Agent - data flows and misuse scenarios
+agent:compliance,5319E7,Compliance Agent - CIS Controls mapping
+agent:guardrails,FBCA04,Guardrails Agent - PR and policy checks
+agent:evidence,0E8A16,Evidence Agent - documentation and traceability
+lab:0-orientation,1D76DB,Labb 0 orientation and security mindset
+lab:1-pipeline,1D76DB,Labb 1 pipeline understanding
+lab:2-controls,1D76DB,Labb 2 Bash and Python controls
+lab:3-risk-cis,1D76DB,Labb 3 risk and CIS mapping
+lab:4-supply-chain,1D76DB,Labb 4 dependencies and supply chain
+lab:5-ai-scanning,1D76DB,Labb 5 code scanning and AI support
+lab:6-guardrails,1D76DB,Labb 6 pull request guardrails
+lab:7-evidence,1D76DB,Labb 7 evidence and final report
+status:needs-triage,EDEDED,Needs first review
+status:needs-support,FBCA04,Student or group needs support
+status:ready-for-review,0E8A16,Ready for teacher review
+status:completion-needed,D93F0B,Completion or clarification needed
+priority:high,B60205,High priority for course readiness
+priority:medium,FBCA04,Medium priority
+priority:low,C5DEF5,Low priority
+area:docs,0075CA,Documentation and learning material
+area:workflow,5319E7,GitHub Actions or process workflow
+area:assessment,0E8A16,Assessment and validation
+area:security,D73A4A,Security controls and risk
+area:ai,8B5CF6,AI support and AI log

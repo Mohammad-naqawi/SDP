@@ -1,0 +1,20 @@
+name: Evidence summary
+
+on:
+  workflow_dispatch:
+
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Generate evidence summary
+        run: bash scripts/evidence_collector.sh
+
+      - name: Upload evidence summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidence-summary
+          path: docs/evidence-summary.txt

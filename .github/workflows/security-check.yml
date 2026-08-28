@@ -1,0 +1,19 @@
+name: Basic security checks
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  basic-security-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Run shell-based checks
+        run: bash scripts/security_check.sh
+
+      - name: Run config check
+        run: python scripts/basic_config_check.py
