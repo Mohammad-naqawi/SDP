@@ -1,0 +1,17 @@
+Kurs: ITSX26 – IT- och cybersäkerhetstekniker
+
+Namn: Mohammad Naqawi
+
+Datum: 2026-09-18
+
+1. Introduktion
+Syftet med denna uppgift var att utveckla ett automatiserat Bash-skript för att utföra grundläggande nätverkssäkerhetskontroller på ett system. Skriptet är utformat för att snabbt kunna inventera aktiva nätverksanslutningar, lyssnande portar samt kontrollera nätverksstatus i studiesyfte eller vid en enklare säkerhetsrevision.
+
+2. Skriptets funktioner
+Bash-skriptet (network_check.sh) utför följande kontroller:
+
+Kontroll av aktiva anslutningar: Listar etablerade nätverksanslutningar och aktiva socketar.
+
+Lyssnande portar: Identifierar vilka tjänster som lyssnar på nätverksportar för att upptäcka potentiellt oönskade öppna portar.
+
+Grundläggande systeminformation: Skriver ut grundläggande nätverksstatus för maskinen.
