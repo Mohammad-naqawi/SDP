@@ -1,0 +1,13 @@
+# Evidensbeskrivning – Network Traffic Investigation
+
+Denna fil dokumenterar underlaget och hanteringen av data för nätverksanalysen i vecka 38.
+
+## Metadata om analysen
+* **Pcap-källa:** Egen fångst genererad i lokal testmiljö (Kali Linux). Rå `.pcap`-fil sparas strikt lokalt och har inte laddats upp till externa repos eller plattformar.
+* **Datum för analys:** September 2026.
+* **Miljö:** Kali Linux (lokal virtualiserad miljö).
+* **Gränssnitt som användes:** `eth0` med tids- och paketbegränsning (max 1 500 paket) för att minimera irrelevant data.
+
+## Hantering och Sanering
+* **Integritet & Sekretess:** Inga externa publika IP-adresser, riktiga användarnamn, lösenord eller MAC-adresser från känsliga nätverk har exponerats. 
+* **Sanering:** Alla skärmbilder, loggar och referenser i rapporten har granskats och sanerats för att säkerställa att ingen känslig metadata läcker ut i GitHub-repot.
