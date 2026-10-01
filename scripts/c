@@ -1,0 +1,97 @@
+#!/bin/bash
+
+# Variabler för loggning och statusräkning
+LOGFILE="network_check.log"
+SUCCESS_COUNT=0
+FAIL_COUNT=0
+
+# Funktion för att logga och skriva ut
+log_message() {
+    local status="$1"
+    local msg="$2"
+    local timestamp
+    timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+
+    if [ "$status" = "PASS" ]; then
+        echo -e "[$timestamp] [ \e[32mPASS\e[0m ] $msg" | tee -a "$LOGFILE"
+        ((SUCCESS_COUNT++))
+    elif [ "$status" = "FAIL" ]; then
+        echo -e "[$timestamp] [ \e[31mFAIL\e[0m ] $msg" | tee -a "$LOGFILE"
+        ((FAIL_COUNT++))
+    else
+        echo -e "[$timestamp] [ INFO ] $msg" | tee -a "$LOGFILE"
+    fi
+}
+
+# Starta loggningen
+echo "====================================================" > "$LOGFILE"
+echo " ITSX26 - Secure Network & System Check" >> "$LOGFILE"
+echo " Kördes: $(date)" >> "$LOGFILE"
+echo "====================================================" >> "$LOGFILE"
+
+echo "===================================================="
+echo " ITSX26 - Secure Network & System Check"
+echo "===================================================="
+
+# 1. Grundläggande systeminformation
+log_message "INFO" "Samlar grundläggande systeminformation..."
+log_message "INFO" "Användare: $(whoami)"
+log_message "INFO" "Värdnamn: $(hostname)"
+log_message "INFO" "Kernel och OS: $(uname -a)"
+log_message "INFO" "Upptid: $(uptime)"
+
+# 2. Hardening-kontroll & Identitet
+log_message "INFO" "2. Kontrollerar identitet och behörigheter (Hardening-kontroll)..."
+id >> "$LOGFILE" 2>&1
+if [ $? -eq 0 ]; then
+    log_message "PASS" "Användarens ID och behörigheter kunde verifieras."
+else
+    log_message "FAIL" "Kunde inte verifiera användaridentitet."
+fi
+
+# 3. Aktiva nätverksanslutningar och lyssnande portar
+log_message "INFO" "3. Kontrollerar aktiva nätverksanslutningar och lyssnande portar..."
+if command -v ss &> /dev/null; then
+    ss -tuln >> "$LOGFILE" 2>&1
+    log_message "PASS" "Portkontroll genomförd med 'ss'."
+else
+    log_message "FAIL" "Kommandot 'ss' saknas."
+fi
+
+# 4. DNS-kontroll (NYTT KRAV)
+log_message "INFO" "4. Utför DNS-kontroll..."
+if host sweden.se &> /dev/null || nslookup sweden.se &> /dev/null; then
+    log_message "PASS" "DNS-uppslagning fungerar som förväntat."
+else
+    log_message "FAIL" "DNS-uppslagning misslyckades."
+fi
+
+# 5. Lokal tjänstekontroll (NYTT KRAV)
+log_message "INFO" "5. Kontrollerar lokal status för SSH-tjänsten..."
+if systemctl is-active --quiet ssh || systemctl is-active --quiet sshd; then
+    log_message "PASS" "SSH-tjänsten är aktiv och körs."
+else
+    log_message "FAIL" "SSH-tjänsten är inte aktiv eller saknas."
+fi
+
+# 6. Processkontroll
+log_message "INFO" "6. Visar de första processerna som körs..."
+ps aux | head -n 5 >> "$LOGFILE" 2>&1
+log_message "PASS" "Processlista hämtad."
+
+# 7. Systemuppdateringar
+log_message "INFO" "7. Kontrollerar paketuppdateringar..."
+if command -v apt &> /dev/null; then
+    apt list --upgradable 2>/dev/null | head -n 10 >> "$LOGFILE"
+    log_message "PASS" "APT-uppdateringar kontrollerade."
+else
+    log_message "INFO" "APT-pakethanterare hittades inte (ej Debian/Ubuntu-baserat system)."
+fi
+
+# Sammanfattning med statusräkning (NYTT KRAV)
+echo "===================================================="
+echo " SAMMANFATTNING"
+echo " Lyckade kontroller: $SUCCESS_COUNT"
+echo " Misslyckade kontroller: $FAIL_COUNT"
+echo "===================================================="
+log_message "INFO" "Sammanfattning - Lyckade: $SUCCESS_COUNT, Misslyckade: $FAIL_COUNT"
