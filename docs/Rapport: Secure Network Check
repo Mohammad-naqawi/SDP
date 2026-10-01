@@ -1,17 +1,75 @@
-Kurs: ITSX26 – IT- och cybersäkerhetstekniker
+# Individuell Rapport: Secure Network Check
+**Kurs:** ITSX26 - IT- och cybersäkerhetstekniker  
+**Student:** Mohammad Naqawi  
+**Datum:** 2026-10-01  
 
-Namn: Mohammad Naqawi
+---
 
-Datum: 2026-09-18
+## 1. Inledning och Syfte
+Syftet med denna uppgift är att utforma och implementera ett automatiserat Bash-skript (`network_check.sh`) för att utföra nätverks- och systemkontroller, samt att analysera systemets säkerhetsstatus utifrån grundläggande härdningsprinciper. Rapporten dokumenterar skriptets funktion, utförda manuella observationer, nätverksflöden och en säkerhetsanalys baserad på CIA-triaden.
 
-1. Introduktion
-Syftet med denna uppgift var att utveckla ett automatiserat Bash-skript för att utföra grundläggande nätverkssäkerhetskontroller på ett system. Skriptet är utformat för att snabbt kunna inventera aktiva nätverksanslutningar, lyssnande portar samt kontrollera nätverksstatus i studiesyfte eller vid en enklare säkerhetsrevision.
+---
 
-2. Skriptets funktioner
-Bash-skriptet (network_check.sh) utför följande kontroller:
+## 2. Miljöbeskrivning
+Kontrollerna och testerna har utförts i följande testmiljö:
+* **Operativsystem:** Ubuntu Linux / Kali Linux (VirtualBox / WSL-miljö)
+* **Skal:** Bash
+* **Nätverksverktyg:** `ss`, `iptables` / brandväggsregler, `systemctl`, `nslookup` / `dig`
 
-Kontroll av aktiva anslutningar: Listar etablerade nätverksanslutningar och aktiva socketar.
+---
 
-Lyssnande portar: Identifierar vilka tjänster som lyssnar på nätverksportar för att upptäcka potentiellt oönskade öppna portar.
+## 3. Manuella Observationer (Minst 6 st)
+Följande manuella observationer har gjorts för att verifiera systemets säkerhetsstatus:
 
-Grundläggande systeminformation: Skriver ut grundläggande nätverksstatus för maskinen.
+1. **Användar- och behörighetskontroll (`id`, `whoami`):** Identifierade att skriptet körs under en standardanvändare respektive root vid behov, vilket är viktigt för att begränsa skadeverkningar vid eventuella intrång (Least Privilege-principen).
+2. **Aktiva anslutningar (`ss -tuln`):** Granskning av öppna portar visade vilka tjänster (exempelvis SSH på port 22) som lyssnar externt respektive internt.
+3. **Processöversikt (`ps aux`):** Kontrollerade vilka processer som är aktiva i bakgrunden för att upptäcka eventuella otillåtna eller okända applikationer.
+4. **Systemuppdateringar (`apt list --upgradable`):** Identifierade att regelbunden kontroll av tillgängliga säkerhetsuppdateringar krävs för att täcka kända sårbarheter.
+5. **DNS-funktionalitet (`nslookup` / `dig`):** Kontrollerade att namnupplösning fungerar korrekt mot externa domäner för att säkerställa att systemet når nätverket som förväntat.
+6. **Tjänstestatus (`systemctl is-active`):** Verifierade att kritiska systemtjänster (exempelvis SSH-servern) körs och är korrekt konfigurerade.
+
+---
+
+## 4. Analys av Nätverksflöden
+### Flöde 1: SSH-anslutning (Fjärradministration)
+* **Beskrivning:** Trafik som initieras från en administratörsklient till serverns port 22.
+* **Protokoll:** TCP / SSHv2.
+* **Säkerhetsaspekt:** Krypterad anslutning som skyddar mot avlyssning (sniffning). Kräver stark autentisering (helst nyckelbaserad inloggning istället för enbart lösenord).
+
+### Flöde 2: DNS-fråga (Namnupplösning)
+* **Beskrivning:** Systemet skickar en förfrågan till en DNS-server för att översätta en domän till en IP-adress.
+* **Protokoll:** UDP/TCP port 53 (eller DoT/DoH för krypterade alternativ).
+* **Säkerhetsaspekt:** Standard DNS är okrypterat och sårbart för *DNS Spoofing* eller avlyssning om inte säkerhetsmekanismer (som DNSSEC) används.
+
+---
+
+## 5. Jämförelse: HTTP vs. TLS/HTTPS
+* **HTTP (Port 80):** All data skickas i klartext. Vilken aktör som helst som befinner sig på samma nätverk kan läsa av känslig information (lösenord, cookies, data) via nätverkstrafikanalys (t.ex. Wireshark).
+* **TLS/HTTPS (Port 443):** Trafiken krypteras med Transport Layer Security. Detta skyddar mot *Man-in-the-Middle*-attacker (MitM) och säkerställer konfidentialitet och integritet för datan som överförs mellan klient och server.
+
+---
+
+## 6. Brandväggsprinciper och Faktisk Trafik
+För att säkra systemet tillämpas "Default Deny"-principen i brandväggen (t.ex. `ufw` eller `iptables`), vilket innebär att all inkommande trafik blockeras som standard, och endast nödvändiga portar (såsom SSH eller webbtrafik) tillåts uttryckligen. Detta minskar attackytan avsevärt.
+
+---
+
+## 7. CIA-analys (Säkerhetsanalys)
+* **Konfidentialitet (Confidentiality):** Skydd mot obehörig insyn. Uppnås genom filbehörigheter (`chmod`), kryptering (TLS/SSH) och att inga lösenord eller känsliga tokens sparas i klartext i skript eller loggar.
+* **Integritet (Integrity):** Säkerställa att data och systemfiler inte manipuleras i onödan. Uppnås genom korrekta ägarskap och systemuppdateringar.
+* **Tillgänglighet (Availability):** Att system och nätverkstjänster är tillgängliga för behöriga användare när de behövs. Övervakas i skriptet genom tjänstekontroller (`systemctl`).
+
+---
+
+## 8. Redovisning av AI-Användning
+AI (såsom stora språkmodeller) har använts som ett pedagogiskt stöd och bollplank för att strukturera upp skriptets felhantering, loggningsfunktioner samt för att säkerställa att rapporten följer efterfrågade akademiska och tekniska krav. All kod och text har granskats och anpassats manuellt.
+
+---
+
+## 9. Slutsats och Rekommendationer
+Det utvecklade Bash-skriptet (`network_check.sh`) fyller funktionen som ett effektivt verktyg för grundläggande nätverks- och systemkontroll med inbyggd loggning och felhantering. 
+
+**Rekommendationer för framtida utveckling:**
+1. Utöka skriptet till att även kontrollera aktiva brandväggsregler automatiskt.
+2. Implementera automatisk larmning (t.ex. via e-post eller webhook) om en kritisk tjänst ligger nere.
+3. Regelbundet granska loggfiler för att upptäcka avvikelser i tid.
