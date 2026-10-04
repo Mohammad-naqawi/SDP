@@ -1,0 +1,68 @@
+import os
+from collections import Counter
+
+def load_suspicious_ips(filepath):
+    suspicious = set()
+    if not os.path.exists(filepath):
+        return suspicious
+    with open(filepath, 'r', encoding='utf-8') as f:
+        for line in f:
+            ip = line.strip()
+            if ip and not ip.startswith('#'):
+                suspicious.add(ip)
+    return suspicious
+
+def analyze_auth(filepath):
+    failed_attempts = Counter()
+    total_lines = 0
+    parsed_lines = 0
+    if not os.path.exists(filepath):
+        return failed_attempts, total_lines, parsed_lines
+    
+    with open(filepath, 'r', encoding='utf-8') as f:
+        for line in f:
+            total_lines += 1
+            parts = line.strip().split(',')
+            if len(parts) < 3:
+                continue  # Robust hantering av formatfel / saknade fält
+            parsed_lines += 1
+            timestamp, ip, status = parts[0], parts[1], parts[2]
+            if status == 'FAILED':
+                failed_attempts[ip] += 1
+    return failed_attempts, total_lines, parsed_lines
+
+def generate_report():
+    os.makedirs('output', exist_ok=True)
+    suspicious_ips = load_suspicious_ips('data/suspicious_ips.txt')
+    auth_fails, total_auth, parsed_auth = analyze_auth('data/auth.log')
+    
+    report_content = f"""# Säkerhetsrapport: Security Automation Analysis
+Genererad automatiserat via Python-skript.
+
+## 1. Sammanfattning av datakällor
+- Analyserade filer: data/auth.log, data/suspicious_ips.txt
+- Totalt antal rader i auth.log: {total_auth}
+- Felfritt parsade rader: {parsed_auth}
+
+## 2. Observationer & IOC-matchning
+Följande IP-adresser uppvisade upprepade misslyckade inloggningsförsök:
+"""
+    for ip, count in auth_fails.most_common():
+        if ip in suspicious_ips:
+            match_status = "MATCHAR KÄND IOC-LISTA"
+        else:
+            match_status = "Ej listad i IOC"
+        report_content += f"- IP: {ip} | Antal misslyckade försök: {count} | Status: {match_status}\n"
+
+    report_content += """
+## 3. Begränsningar och Osäkerhet
+- Frekventa misslyckade försök utgör en indikation på potentiellt brute-force-försök eller felkonfigurerade klienter.
+- Förekomst på IOC-listan bekräftar inte per automatik en aktiv kompromettering utan kräver manuell korrelation.
+"""
+    
+    with open('output/security_report.txt', 'w', encoding='utf-8') as out:
+        out.write(report_content)
+    print("Rapport genererad i output/security_report.txt")
+
+if __name__ == '__main__':
+    generate_report()
