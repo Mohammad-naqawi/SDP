@@ -1,0 +1,44 @@
+# Säkerhetsutredning: Avancerad AI-driven Spear-Phishing mot Kommunal Förvaltning (Case A)
+
+## 1. Introduktion och Fallbeskrivning
+Denna rapport utgör en strukturerad säkerhetsanalys av en simulerad incident där **Stenstadens kommun** utsätts för en riktad nätfiskeattack (spear-phishing) förstärkt av generativ artificell intelligens (AI). Angriparen har utnyttjat stora språkmodeller (LLM) och automatiserad Open Source Intelligence (OSINT) för att utforma trovärdiga, kontextanpassade och språkligt felfria meddelanden riktade mot nyckelpersoner inom kommunens socialförvaltning och ekonomiavdelning.
+
+### 1.1 Metodologi och avgränsningar (G-nivå)
+- **Faktagrund:** Angreppet levererades via e-post till tre utvalda medarbetare med administrativa befogenheter. E-posten simulerade en brådskande uppdatering från en extern myndighet gällande lagstadgade välfärdsdata.
+- **Hypoteser och antaganden:** Det antas att angriparen har genomfört omfattande OSINT-insamling via kommunens publika hemsida, pressmeddelanden och sociala medier för att kartlägga interna beslutsstrukturer och namnge riktiga chefer som avsändarstöd (social engineering).
+- **Osäkerheter:** Angriparens exakta tekniska infrastruktur (såsom specifika Command and Control-servrar eller träningsdata för LLM-modellerna) kan ej fastställas med fullständig säkerhet och klassificeras därmed som en bedömd osäkerhet.
+
+---
+
+## 2. Teknisk Analys av Angreppsmetoden (AI-Phishing)
+Traditionellt nätfiske präglas ofta av språkliga brister, konstiga formuleringar och generiska hotbilder. AI-phishing förändrar hotlandskapet radikalt genom följande mekanismer:
+1. **Hyper-personalisering:** Genom att prompta en LLM på offentliga handlingar kan angriparen efterlikna en specifik myndighets tonfall, terminologi och formalia på perfekt svenska utan grammatiska avvikelser.
+2. **Skalbarhet och polymorfism:** Textinnehållet kan genereras unikt för varje offer, vilket gör att statiska signaturbaserade e-postfilter misslyckas med att flagga meddelandet som skadligt.
+3. **Kognitiv manipulation:** Angreppet utnyttjar psykologiska faktorer som auktoritetstro och tidsnöd ("brådskande åtgärd krävs för att undvika sanktionsavgifter").
+
+---
+
+## 3. Konsekvensanalys utifrån CIA-triaden
+För att bedöma incidentens allvarlighetsgrad tillämpas CIA-triaden:
+
+- **Konfidentialitet (Confidentiality) – Hög risk:**
+  Om en anställd klickar på länken och matar in sina autentiseringsuppgifter i en falsk inloggningsportal (credential harvesting), riskerar angriparen att komma över behörighetsuppgifter. Detta kan leda till obehörig åtkomst till interna ärendehanteringssystem, skyddade personuppgifter och konfidentiella dokument.
+- **Integritet (Integrity) – Medelrisk:**
+  Komprometterade konton kan missbrukas för lateral movement, det vill säga att angriparen rör sig i nätverket, manipulerar interna register eller skickar ut interna skadliga meddelanden som ser ut att komma från betrodda kollegor.
+- **Tillgänglighet (Availability) – Låg till medelrisk:**
+  Även om huvudsyftet i detta fall är datastöld eller ekonomisk brottslighet, kan ett lyckat intrång eskalera till utpressningsskadeprogram (ransomware), vilket lamslår kommunens digitala tjänster och drabbar medborgarna direkt.
+
+## 4. Relevanta CIS Controls och Riskreducering
+För att hantera och förebygga liknande incidenter rekommenderas implementering av följande kontroller ur **CIS Controls (Version 8)**:
+
+1. **CIS Control 9: Email and Web Browser Protections**
+   - *Motivering & Åtgärd:* Eftersom e-post är primär attackvektor krävs avancerade Secure Email Gateways (SEG) med inbyggd AI-analys som identifierar beteendeavvikelser, källkodsfel i länkar och skadliga omdirigeringar oberoende av textens språkliga kvalitet.
+2. **CIS Control 14: Security Awareness and Skills Training**
+   - *Motivering & Åtgärd:* Människan är ofta den svagaste länken. Regelbunden och interaktiv utbildning för kommunanställda gällande AI-genererade hot, deepfakes och verifieringsrutiner för externa betalnings- eller informationsbegäranden är tvingande.
+3. **CIS Control 5: Account Management**
+   - *Motivering & Åtgärd:* Strikt hantering av användarkonton och tvingande, nätfiskebeständig multifaktorautentisering (MFA, t.ex. FIDO2/WebAuthn-nycklar) för alla system som hanterar känslig kommunal information.
+
+---
+
+## 5. Slutsats
+AI-phishing utgör en sofistikerad och svårupptäckt attackvektor mot offentlig sektor. Genom att kombinera tekniska skyddsmekanismer (såsom avancerad e-postfiltrering och tvingande MFA) med en stark säkerhetskultur och utbildning kan Stenstadens kommun avsevärt höja sin motståndskraft och skydda samhällsviktig information.
