@@ -1,0 +1,17 @@
+# AI Security Case Investigation – Case A: AI-phishing mot en kommun (Sikte G)
+
+Detta repository innehåller en komplett och avancerad säkerhetsutredning för **Case A**, som analyserar ett simulerat, avancerat AI-genererat nätfiskeangrepp (spear-phishing) riktat mot en svensk kommunal förvaltning. Utredningen tillämpar etablerade ramverk som CIA-triaden och CIS Controls (v8) för riskhantering och motmeasures.
+
+## 📁 Repository-struktur
+```text
+week40-ai-security-case/
+├── README.md
+├── ai_usage.md
+├── docs/
+│   ├── report.md
+│   ├── english_security_summary.md
+│   └── references.md
+└── evidence/
+    ├── figures/
+    ├── diagrams/
+    └── supporting_material/
