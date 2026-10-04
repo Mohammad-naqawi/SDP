@@ -1,0 +1,8 @@
+# Week 39: Security Automation Report
+
+- **Dataset:** Dataset A (Standardiserade loggar för auth och access).
+- **Python-version:** Python 3.10+
+- **Körinstruktion:** 
+  Kör skriptet från projektets rotmapp med kommandot:
+  ```bash
+  python3 src/security_report.py
