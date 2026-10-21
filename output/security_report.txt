@@ -1,0 +1,19 @@
+=== SECURITY AUTOMATION REPORT (G-NIVÅ) ===
+Genomförd analys av auth.log och access.log.
+
+1. DATAKÄLLOR OCH STATISTIK
+- auth.log: 2 rader totalt, 2 godkända, 0 felaktiga.
+- access.log: 1 rader totalt, 1 godkända, 0 felaktiga.
+
+2. OBSERVATIONER (MISSLYCKADE INLOGGNINGAR)
+IP-adress | Misslyckade försök | IOC-matchning
+--------------------------------------------------
+192.168.1.50    | 1                  | Träff i IOC
+
+3. OBSERVATIONER (WEBBTRAFIK)
+IP-adress | Antal anrop | IOC-matchning
+--------------------------------------------------
+192.168.1.50    | 1           | Träff i IOC
+
+4. BEGRÄNSNINGAR
+- En träff i IOC-listan innebär endast att adressen förekommer i listan, inte att en bekräftad attack har skett.

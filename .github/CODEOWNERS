@@ -1,0 +1,10 @@
+# CODEOWNERS v1.0
+# Anpassa dessa rader till faktisk GitHub-organisation/team innan användning.
+
+* @REPLACE-WITH-ORG/itsx26-teachers
+/docs/ @REPLACE-WITH-ORG/itsx26-teachers
+/agent-prompts/ @REPLACE-WITH-ORG/itsx26-teachers
+/.github/ @REPLACE-WITH-ORG/itsx26-maintainers
+/scripts/ @REPLACE-WITH-ORG/itsx26-maintainers
+/app/ @REPLACE-WITH-ORG/itsx26-maintainers
+/tests/ @REPLACE-WITH-ORG/itsx26-maintainers

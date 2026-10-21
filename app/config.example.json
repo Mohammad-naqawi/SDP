@@ -1,0 +1,8 @@
+{
+  "debug": false,
+  "environment": "lab",
+  "log_level": "INFO",
+  "allowed_origins": ["http://localhost:8000"],
+  "use_demo_data_only": true,
+  "secret_value": "REPLACE_WITH_LOCAL_VALUE_DO_NOT_COMMIT_REAL_SECRET"
+}
