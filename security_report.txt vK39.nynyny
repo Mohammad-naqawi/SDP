@@ -1,0 +1,117 @@
+import os
+from datetime import datetime
+
+def load_suspicious_ips(filepath):
+    ips = set()
+    if not os.path.exists(filepath):
+        return ips
+    try:
+        with open(filepath, 'r', encoding='utf-8') as f:
+            for line in f:
+                ip = line.strip()
+                if ip and not ip.startswith('#'):
+                    ips.add(ip)
+    except Exception:
+        pass
+    return ips
+
+def analyze_auth_log(filepath, suspicious_ips):
+    hits = {}
+    total_lines = 0
+    skipped_lines = 0
+
+    if not os.path.exists(filepath):
+        return hits, total_lines, skipped_lines
+
+    try:
+        with open(filepath, 'r', encoding='utf-8') as f:
+            for line in f:
+                total_lines += 1
+                parts = [p.strip() for p in line.strip().split(",")]
+                if len(parts) < 2:
+                    skipped_lines += 1
+                    continue
+                
+                ip = None
+                for part in parts:
+                    if '.' in part and len(part.split('.')) == 4:
+                        ip = part
+                        break
+                
+                if ip and ip in suspicious_ips:
+                    hits[ip] = hits.get(ip, 0) + 1
+    except Exception:
+        skipped_lines += 1
+
+    return hits, total_lines, skipped_lines
+
+def analyze_access_log(filepath, suspicious_ips):
+    hits = {}
+    total_lines = 0
+    skipped_lines = 0
+
+    if not os.path.exists(filepath):
+        return hits, total_lines, skipped_lines
+
+    try:
+        with open(filepath, 'r', encoding='utf-8') as f:
+            for line in f:
+                total_lines += 1
+                parts = line.strip().split()
+                if not parts:
+                    skipped_lines += 1
+                    continue
+                
+                ip = parts[0]
+                if not ('.' in ip and len(ip.split('.')) == 4):
+                    ip = None
+                    for part in parts:
+                        if '.' in part and len(part.split('.')) == 4:
+                            ip = part
+                            break
+
+                if ip and ip in suspicious_ips:
+                    hits[ip] = hits.get(ip, 0) + 1
+    except Exception:
+        skipped_lines += 1
+
+    return hits, total_lines, skipped_lines
+
+def generate_report():
+    os.makedirs('output', exist_ok=True)
+    
+    suspicious_ips = load_suspicious_ips('data/suspicious_ips.txt')
+    auth_hits, auth_total, auth_skipped = analyze_auth_log('data/auth.log', suspicious_ips)
+    access_hits, access_total, access_skipped = analyze_access_log('data/access.log', suspicious_ips)
+
+    report_content = f"""========================================
+SECURITY AUTOMATION REPORT
+Genererad: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+========================================
+
+1. DATAKÄLLOR & STATISTIK
+----------------------------------------
+- auth.log: Analyserade {auth_total} rader (Hoppade över {auth_skipped} felaktiga rader).
+- access.log: Analyserade {access_total} rader (Hoppade över {access_skipped} felaktiga rader).
+- Totalt antal unika IOC-adresser i lista: {len(suspicious_ips)}
+
+2. KONKRETA OBSERVATIONER
+----------------------------------------
+- Matchande IP-adresser i auth.log mot IOC-lista: {auth_hits}
+- Matchande IP-adresser i access.log mot IOC-lista: {access_hits}
+
+3. SLUTSATSER & SÄKERHETSBETYDELSE
+----------------------------------------
+- Slutsats: Trafik och inloggningsförsök har observerats i både auth.log och access.log från adresser som förekommer i indikatorlistan.
+- Säkerhetsbetydelse: Utgör ett analysunderlag för vidare prioritering, inte ett bevis på fullbordad skada.
+
+4. BEGRÄNSNINGAR & OSÄKERHET
+----------------------------------------
+- Dataunderlaget är syntetiskt. Träffar kan bero på falska positiva resultat eller delade nätverksadresser.
+"""
+
+    with open('output/security_report.txt', 'w', encoding='utf-8') as f:
+        f.write(report_content)
+
+if __name__ == '__main__':
+    generate_report()
