@@ -1,0 +1,20 @@
+# Säkerhetsanalys – Security Automation
+
+## 1. Rådata
+- **Använda filer:** `data/auth.log`, `data/access.log`, `data/suspicious_ips.txt`.
+- **Felhantering:** Rader med saknade fält eller felaktigt format fångas upp i koden, räknas som hoppade rader och loggas utan att skriptet kraschar.
+
+## 2. Observation
+- Programmet har läst in autentiseringsloggar och webbloggar, extraherat käll-IP-adresser och jämfört dem mot indikatorlistan (`suspicious_ips.txt`). Antalet matchningar har räknats och sammanställts.
+
+## 3. Slutsats
+- Trafik från specifika externa IP-adresser i indikatorlistan har interagerat med systemet. Detta motiverar en fördjupad granskning av tidsstämplar.
+
+## 4. Osäkerhet
+- En träff i en IOC-lista är en indikator, inte ett bevis. IP-adresser kan vara spoofade, dynamiska eller tillhöra legitima nätverk.
+
+## 5. Alternativ förklaring
+- Samma mönster kan orsakas av felaktiga konfigurationer hos en legitim klient eller automatiska botar utan skadligt uppsåt.
+
+## 6. Säkerhetsbetydelse
+- Resultatet hjälper SOC-analytiker att prioritera vilka incidenter som bör undersökas först.
