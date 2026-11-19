@@ -1,0 +1,99 @@
+# Säkerhetsutredning: Case A – AI-phishing mot en kommun
+
+## 1. Executive summary
+En kommunal förvaltning har tagit emot flera välformulerade mejl som ser ut att likna intern IT-support och uppmanar mottagare att logga in via en länk för att behålla åtkomsten till ett internt system. En medarbetare har öppnat länken men uppger att inga inloggningsuppgifter lämnades. Det finns i nuläget ingen bekräftad incident eller bekräftat intrång, och det är inte fastställt om generativ AI har använts för att skapa mejlen.
+
+Utifrån givna fakta bedöms den aktuella risken som låg till medel på en enkel kvalitativ skala: sannolikheten för ett pågående bekräftat intrång är låg i nuläget eftersom inga uppgifter uppges ha lämnats, medan potentiella konsekvenser om ett konto ändå komprometteras kan bli kännbara för berörda system och arbetsflöden. En central osäkerhet är om länken ledde till en skadlig sida, om spårning eller autentiseringsförsök skett i tysthet samt om AI faktiskt medverkat.
+
+För att minska risken och skapa spårbarhet föreslås tre prioriterade och verifierbara åtgärder kopplade till CIS 6, CIS 8 och CIS 14 i CIS Controls v8.1: stärkt åtkomstkontroll/MFA med begränsade behörigheter, säkrad och korrelerbar loggning kring e-post, webb och inloggningar samt rollanpassad träning och tydlig verifieringsrutin för IT-uppmaningar.
+
+## 2. Fakta, antaganden och scope
+### Givna fakta
+- En kommunal förvaltning har fått flera välformulerade mejl.
+- Avsändarnamnet liknar intern IT-support.
+- Mottagarna uppmanas att logga in via en länk för att behålla åtkomsten till ett internt system.
+- En medarbetare har klickat/öppnat länken.
+- Medarbetaren uppger att inga uppgifter lämnades, och det finns ingen bekräftad inloggningsinformation som lämnats.
+- Det finns ännu inga bekräftade uppgifter om intrång eller en bekräftad incident.
+- Huruvida mejlen skapats med AI är inte fastställt; AI-användning är en möjlighet, inte ett faktum.
+
+### Antaganden och hypoteser
+- **Hypotes om AI-användning:** Mejlen kan ha skapats eller språkligt finslipats med hjälp av generativ AI, men välformulerad text är i sig inte ett bevis för AI-användning.
+- **Antagande om syftet med länken:** Länken kan ha varit avsedd att locka mottagare till en sida som efterliknar en inloggningssida för det interna systemet, men detta är ännu inte tekniskt bekräftat i fallet.
+- **Antagande om medarbetarens uppgift:** Medarbetaren bedömer att inga uppgifter lämnades vid sidvisningen, men oavsiktlig sessionsexponering eller dold skriptkörning vid sidbesök kan inte uteslutas utan teknisk kontroll.
+
+### Osäkerheter och vad som behöver verifieras / scope
+- **Osäkerheter:** Det är oklart exakt vilka mottagare som fått mejlen, vad måladressen för länken faktiskt leder till, om någon annan mottagare agerat på länken samt om obehöriga inloggningsförsök skett.
+- **Behöver verifieras:** E-postheaders och leveransloggar, webb-/proxy-/DNS-loggar kopplade till länken samt autentiseringsloggar (inklusive MFA-händelser) för medarbetarens konto och det interna systemet.
+- **Scope:** Analysen omfattar enbart den beskrivna händelsen i den kommunala förvaltningen utifrån givet underlag på G-nivå.
+
+## 3. Tillgångar och händelsekedja
+### Identifierade tillgångar
+1. **Användarkonton och autentiseringsuppgifter** för kommunens medarbetare som nåtts av utskicket eller använder det interna systemet.
+2. **Det interna systemet** vars åtkomst uppges kräva inloggning, samt informationen som hanteras där.
+3. **E-post- och kommunikationsflödet** (inklusive tilliten till avsändarnamn som liknar intern IT-support).
+4. **Medarbetarnas uppmärksamhet och arbetsrutiner** kring hantering av IT-relaterade uppmaningar och länkar.
+5. **Logg- och spårbarhetsdata** för e-post, nätverk/webb och autentisering som krävs för att avgöra vad som faktiskt inträffat.
+
+### Händelsekedja (fyra steg)
+1. **Utskick:** Flera medarbetare i den kommunala förvaltningen tar emot välformulerade mejl med ett avsändarnamn som liknar intern IT-support och en uppmaning att logga in via en länk för att behålla åtkomsten till ett internt system.
+2. **Interaktion:** En medarbetare öppnar länken i mejlet men uppger att inga uppgifter lämnas.
+3. **Osäkert utfall:** Det är i nuläget obekräftat om någon inloggningsinformation exponerats, om länken ledde till en skadlig resurs eller om mejlen skapats med AI; inget intrång är bekräftat.
+4. **Utrednings- och hanteringsbehov:** Organisationen står inför behovet att kontrollera loggar och kontostatus för att avgöra om en faktisk incident föreligger eller om händelsen stannat vid ett oskadliggjort/ofullbordat försök.
+
+## 4. CIA och enkel riskbedömning
+CIA-analysen nedan kopplas till specifika tillgångar i scenariot:
+
+- **Confidentiality (Konfidentialitet):** Om en medarbetare trots uppgiven bedömning skulle ha exponerat autentiseringsuppgifter eller sessionsdata till en obehörig destination riskerar *användarkonton* och *information i det interna systemet* att nås av obehöriga. I nuläget saknas dock bekräftelse på att uppgifter lämnats.
+- **Integrity (Integritet):** *Avsändaridentitetens trovärdighet* i intern IT-kommunikation samt *data och konfiguration i det interna systemet* påverkas om ett falskt avsändarnamn används för att styra användare mot fel inloggningsväg, eller om ett obehörigt konto senare skulle ändra uppgifter i systemet.
+- **Availability (Tillgänglighet):** *Tillgängligheten till det interna systemet* och *medarbetarnas/IT-stödets arbetsflöde* kan störas om användare tror att de förlorar åtkomst, om konton låses/återställs i förebyggande syfte eller om ärendehantering fördröjs av osäkerhet och manuella kontroller.
+
+### Enkel kvalitativ riskbedömning
+- **Sannolikhet (Låg i nuläget för bekräftat intrång / Medel för fler social engineering-försök):** Mejlen har redan nått flera medarbetare och en länk har öppnats, men inga uppgifter uppges ha lämnats och inget intrång är bekräftat.
+- **Konsekvens (Medel):** Om åtkomst till det interna systemet ändå skulle uppnås eller om felaktiga inloggningsvanor sprids kan det medföra obehörig åtkomst, störd drift och tidsödande utredning.
+- **Samlad kvalitativ risknivå: Låg–Medel.** Motivering: Det saknas bekräftad kompromettering, men eftersom utskicket redan nått flera mottagare och en länk öppnats krävs riktad kontroll och förebyggande skydd så att risken inte eskalerar.
+
+## 5. CIS-mappning
+Analysen utgår från **CIS Critical Security Controls v8.1**:
+
+- **CIS 6: Access Control Management**
+  - *Relation till caset:* Begränsar vad ett konto kan nå och försvårar obehörig inloggning även om en användare utsätts för en vilseledande länk eller inloggningsuppmaning.
+  - *Konkret åtgärd:* Kontrollera och säkerställ stark autentisering (MFA) samt principen om minsta privilegium för det interna systemet och berörda medarbetarkonton, inklusive granskning av aktiva sessioner och behörigheter.
+  - *Verifieringsmetod:* Granska identitets-/autentiseringskonfigurationen och stickprovskontrollera aktiva sessioner samt behörighetslistor för det interna systemet.
+
+- **CIS 8: Audit Log Management**
+  - *Relation till caset:* Eftersom det är oklart om uppgifter lämnats eller intrång skett är tillförlitliga loggar avgörande för att fastställa vad som hänt kring länken, medarbetarens konto och det interna systemet.
+  - *Konkret åtgärd:* Säkerställ att loggning är aktiverad, tidssynkroniserad och centralt samlad för e-posthändelser, webb-/DNS-/proxyförfrågningar samt inloggnings- och autentiseringshändelser kopplade till det interna systemet.
+  - *Verifieringsmetod:* Genomför en kontrollerad logggranskning/sökning på test- och referenshändelser för att verifiera att tidsstämplar, användaridentiteter och käll-/destinationsuppgifter loggas fullständigt och skyddas mot obehörig ändring.
+
+- **CIS 14: Security Awareness and Skills Training**
+  - *Relation till caset:* Mejlen liknar intern IT-support och utnyttjar förtroende och brådska/åtkomstkrav; träning och tydliga rutiner hjälper medarbetare att agera säkert när länkar och kontouppmaningar dyker upp.
+  - *Konkret åtgärd:* Genomför kort, rollanpassad utbildning och en tydlig verifieringsrutin där medarbetare kontrollerar misstänkta IT-mejl via en separat, känd intern kanal i stället för att logga in via oväntade länkar.
+  - *Verifieringsmetod:* Följ upp genomförandegrad, genomför en kort praktisk kunskaps-/rutinkontroll eller övningsavstämning med berörd personal och mät andelen som följer verifieringsrutinen vid tveksamhet.
+
+## 6. Prioriterade åtgärder
+1. **Prioritet 1 – Verifiera loggar och kontostatus samt säkra loggspårbarhet (CIS 8):** Eftersom en länk redan har öppnats behöver organisationen först fastställa vad som skett och säkerställa att relevanta loggar finns och är sökbara.
+2. **Prioritet 2 – Stärk åtkomstkontroll, MFA och minsta privilegium (CIS 6):** Begränsar skadeutfallet om autentiseringsuppgifter eller sessioner trots allt skulle ha påverkats eller utsätts i framtiden.
+3. **Prioritet 3 – Inför/förtydliga verifieringsrutin och rollanpassad träning (CIS 14):** Minskar sannolikheten att medarbetare klickar på länkar eller lämnar uppgifter vid framtida utskick som liknar IT-support.
+
+## 7. Teknisk koppling
+Händelsen knyter direkt till grundläggande nätverks-, identitets- och loggningsmekanismer från kursen:
+- **Autentisering och sessioner:** En länk som uppmanar till inloggning berör identitetsverifiering och sessionshantering. Även om inga uppgifter uppges ha lämnats kan man i autentiserings- och sessionsloggar kontrollera om ovanliga inloggningsförsök, nya enheter eller oväntade sessioner förekommit.
+- **Nätverk och e-postspårbarhet:** För att avgöra om mejlen verkligen kom från intern IT-support eller förfalskats behöver man granska avsändarinformation/e-postflöde, och för att se vart länken ledde behövs DNS-/webb-/proxyloggar samt nätverkskontroller som visar vilka destinationer som kontaktats.
+- **Logganalys och bevisvärde:** Att skilja mellan vad som syns i loggar (evidens) och vad som endast antas är centralt för att undvika både falska slutsatser om intrång och förbisedda spår.
+
+## 8. English Security Summary
+The municipal administration received several well-written emails appearing to come from internal IT support, urging recipients to log in via a link to keep access to an internal system. One employee opened the link and reported submitting no credentials. Currently, there is no confirmed breach or incident, and whether generative AI was used to write the messages remains unconfirmed.
+
+Affected assets include user accounts, the internal system, email communication workflows, employee routines, and audit logs. Potential impacts span confidentiality if credentials or sessions were exposed, integrity if sender identity or system records are affected, and availability if access or support workflows are disrupted.
+
+Priority actions align with CIS Controls v8.1: verifying and securing audit logs (CIS 8), enforcing strong access control and least privilege (CIS 6), and reinforcing verification routines through targeted awareness (CIS 14). Key limitations include missing forensic confirmation of the link target, potential silent activity, and unverified AI involvement.
+
+## 9. AI- och källredovisning
+- **AI-verktyg och användning:** En generativ språkmodell har använts som stöd för strukturering, disposition och språklig formulering på svenska och engelska utifrån kursens instruktioner.
+- **Verifiering, upptäckta fel och egna korrigeringar:** Ett tidigare utkast hade fördelen av att beskriva phishing-mekaniker allmänt, men innehöll allvarliga brister: det lade till ett påhittat kommunnamn, obekräftade antaganden som OSINT och intrångsdetaljer som saknas i caset samt felaktiga CIS Controls. I denna version har samtliga påståenden kontrollerats mot Case A:s givna fakta, påhittade detaljer har tagits bort, antaganden och osäkerheter har markerats tydligt, och kontrollerna har korrigerats till CIS 6, CIS 8 och CIS 14 (CIS Controls v8.1).
+- **Källor:** Se `docs/references.md`.
+
+## 10. Slutsats
+Baserat på de givna fakta i Case A finns det i nuläget inget bekräftat intrång och ingen bekräftad AI-användning, men eftersom flera medarbetare fått mejlen och en länk öppnats finns en rimlig anledning att agera metodiskt. Kvarvarande osäkerhet rör främst vad länken faktiskt ledde till, om några uppgifter eller sessioner påverkats utan att det märkts samt om fler mottagare interagerat. Genom att kombinera spårbarhet genom CIS 8, stark åtkomstkontroll genom CIS 6 och tydliga rutiner genom CIS 14 kan kommunen hantera läget proportionerligt och verifierbart utan att överdriva vad som är bevisat.
+
