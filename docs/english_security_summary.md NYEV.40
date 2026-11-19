@@ -1,0 +1,7 @@
+# English Security Summary – Case A
+
+The municipal administration received several well-written emails appearing to come from internal IT support, asking recipients to log in via a link to keep access to an internal system. One employee opened the link and reported submitting no credentials. There is no confirmed breach or incident yet, and whether generative AI was used remains unconfirmed.
+
+Affected assets include user accounts, the internal system, email workflows, staff routines, and audit logs. Main potential impacts affect confidentiality if credentials or sessions were exposed, integrity if sender trust or system data is compromised, and availability if workflows or support processes are disrupted.
+
+The top control is CIS 8 (Audit Log Management) to verify link and authentication activity, supported by CIS 6 (Access Control Management) and CIS 14 (Security Awareness and Skills Training) under CIS Controls v8.1. Key limitations include unverified link behavior, potential silent exposure, and lack of confirmation regarding AI involvement.
