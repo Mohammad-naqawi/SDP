@@ -1,0 +1,10 @@
+# AI-användning, verifiering och egna korrigeringar
+
+## 1. Verktyg och användningsområde
+- **Verktyg:** Generativ AI / språkmodell (LLM).
+- **Användningsområde:** Stöd vid disposition, strukturering av rapportavsnitt och språklig bearbetning på svenska och engelska enligt uppgiftens krav.
+
+## 2. Verifiering och egna korrigeringar
+- **Kontroll mot givna fakta:** Alla påståenden i rapporten har stämts av mot uppgiftstexten för Case A så att endast givna fakta behandlas som fakta.
+- **Upptäckta fel och korrigeringar:** Ett tidigare utkast innehöll ounderbyggda antaganden och påhittade detaljer (bland annat ett påhittat kommunnamn, antaganden om OSINT, intrång och felaktiga CIS Controls). Dessa fel har tagits bort, antaganden/hypoteser/osäkerheter har markerats tydligt, och analysen har anpassats till CIS 6, CIS 8 och CIS 14 (CIS Controls v8.1) med verifieringsmetoder för varje åtgärd.
+- **Sekretess och sanering:** Inga verkliga personuppgifter, autentiseringsuppgifter eller känsliga loggar används.
