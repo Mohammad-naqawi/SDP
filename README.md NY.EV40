@@ -1,0 +1,20 @@
+# Week 40 – AI Security Case Investigation (Case A)
+
+Detta repository innehåller min individuella examination för **Case A – AI-phishing mot en kommun (sikte G)** inom kursen *Grunder i IT och cybersäkerhet* (ITSX26, vecka 40).
+
+Utredningen utgår enbart från de givna fakta som presenteras i Case A, skiljer tydligt mellan fakta, antaganden, hypoteser och osäkerheter, analyserar påverkan på CIA-triaden kopplat till identifierade tillgångar samt kopplar åtgärder och verifiering till **CIS 6**, **CIS 8** och **CIS 14** enligt **CIS Critical Security Controls v8.1**.
+
+## Repository-struktur
+
+```text
+week40-ai-security-case/
+├── README.md
+├── ai_usage.md
+├── docs/
+│   ├── report.md
+│   ├── english_security_summary.md
+│   └── references.md
+└── evidence/
+    ├── figures/
+    ├── diagrams/
+    └── supporting_material/
